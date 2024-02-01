@@ -4,25 +4,24 @@
 
 const router = useRouter()
 
-const { id } = defineProps(['id'])
-
+const recipe = defineProps(['id', 'name', 'img', 'calories', 'protein', 'carbs', 'fat'])
 
 </script>
 
 <template>
-    <div class="w-[95%] rounded overflow-hidden mb-10 hover:underline hover:text-orange-500" @click="router.push({ path: id })">
+    <div class="w-[95%] rounded overflow-hidden mb-10 hover:underline hover:text-orange-500" @click="router.push({ path: recipe.id })">
         <img class="w-full h-64"
-            src="https://www.tasteofhome.com/wp-content/uploads/2018/01/Spicy-Chicken-Tomato-Soup_EXPS_HSCBZ18_18481_D08_16_1b.jpg"
+            :src="recipe.img"
             alt="">
         <div class="px-6 py-4 text-center ">
             <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold">
-                <div class="">792 Cal</div>
-                <div class="">123 P</div>
-                <div class="">123 C</div>
-                <div class="">123 F</div>
+                <div class="">{{ recipe.calories }} Cal</div>
+                <div class="">{{ recipe.protein }} P</div>
+                <div class="">{{ recipe.carbs }} C</div>
+                <div class="">{{ recipe.fat }} F</div>
             </div>
 
-            <div class="font-bold text-2xl mb-2">Chicken Tomato Soup</div>
+            <div class="font-bold text-2xl mb-2">{{ recipe.name }}</div>
 
         </div>
         <div class="px-6 pb-2 text-center">

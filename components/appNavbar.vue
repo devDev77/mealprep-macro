@@ -1,6 +1,4 @@
 
-import type { buildAssetsDir } from 'nuxt/dist/core/runtime/nitro/paths';
-import type { NuxtLink } from '#build/components';
 
 <script setup></script>
 
@@ -16,7 +14,7 @@ import type { NuxtLink } from '#build/components';
           id="nav-title"
         >
           <img
-            src="/public/favicon.ico"
+            src="/favicon.ico"
             class="h-8"
             alt="Not Delish Logo"
           />

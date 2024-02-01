@@ -1,13 +1,23 @@
-
-
 <script setup>
+
+import { collection } from 'firebase/firestore'
+import { doc } from 'firebase/firestore'
+
+const route = useRoute()
+const id = route.params.id
+
+const db = useFirestore()
+const recipe = useDocument(doc(collection(db, 'recipes'), id))
 
 </script>
 
-
 <template>
-    <div>
-        <h1>HELLO</h1>
+    
+    <h1 class="text-center text-3xl font-bold">{{ recipe.name }}</h1>
+
+
+    <div class="block">
+        <img :src="recipe.img" alt="">
     </div>
 </template>
 
