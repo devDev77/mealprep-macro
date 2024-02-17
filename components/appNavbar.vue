@@ -31,6 +31,9 @@
             <NuxtLink to="/"> Home </NuxtLink>
 
             <NuxtLink to="about"> About </NuxtLink>
+
+            <NuxtLink to="create"> Create </NuxtLink>
+
           </ul>
         </div>
       </div>

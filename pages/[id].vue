@@ -12,12 +12,20 @@ const recipe = useDocument(doc(collection(db, 'recipes'), id))
 </script>
 
 <template>
-    
-    <h1 class="text-center text-3xl font-bold">{{ recipe.name }}</h1>
+    <div class="ml-16 w-[50%]">
+        <h1 class="text-3xl text-center font-bold mt-12">{{ recipe.name }}</h1>
+
+        <div class="text-gray-700 w-full justify-center px-auto mt-2 mb-3 flex margin-auto space-x-6 text-lg font-bold">
+            <div class="">{{ recipe.calories }} Calories</div>
+            <div class="">{{ recipe.protein }}g Protein</div>
+            <div class="">{{ recipe.carbs }}g Carbs</div>
+            <div class="">{{ recipe.fat }}g Fat</div>
+        </div>
 
 
-    <div class="block">
-        <img :src="recipe.img" alt="">
+        <div class="block">
+            <img :src="recipe.img" class="w-[650px]" alt="">
+        </div>
     </div>
 </template>
 
