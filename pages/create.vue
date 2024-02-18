@@ -3,54 +3,52 @@
 
 import { ref } from 'vue';
 
-const ingredients = ref(['ground beef', 'onion'])
+const ingredients = ref(['ground beef', 'red onion'])
 
 const nutritionInfo = ref(null)
+
+const { data: nutrition } = await useAsyncData('nutrition', () => queryContent().find())
 
 async function getNutritionInfo() {
 
     nutritionInfo.value = null
+    let totalFoodNutrients = null
 
     for (const ingredient of ingredients.value) {
-        console.log(ingredient)
-        
-        const { data } = await useFetch('/api/nutrition-info', {
-            method: 'post',
-            body: { ingredient: ingredient }
+
+        let keyWords = ingredient.toLowerCase().match(/\w+/g)
+
+        let results = nutrition.value[0].FoundationFoods.filter((array) => {
+
+            return keyWords.every(word => array.description.toLowerCase().includes(word))
+
         })
 
-        if (nutritionInfo.value) {
+        let nutrients = results[0].foodNutrients.filter(amt => amt.amount > 0.1)
+        let foodPortion = results[0].foodPortion
 
-            console.log('HIASD')
+        let index = 0
 
-            const newData = data.value
-
-            console.log(newData)
-
-            for (const nutrient of nutritionInfo.value) {
-
-                let index = nutritionInfo.value.indexOf(nutrient)
-
-                if (nutrient.nutrientId === newData.foodNutrients[index].nutrientId) {
-                    nutrient.value += newData.foodNutrients[index].value
-                }
-            }
-
+        if (!totalFoodNutrients) {
+            totalFoodNutrients = nutrients
         } else {
+            for (const nutrient of nutrients) {
 
-            console.log('IN HERE')
-            console.log(data.value)
+                if (nutrient.nutrient.id === totalFoodNutrients[index].nutrient.id) {
+                    nutrient.nutrient.amount += totalFoodNutrients[index].nutrient.amount
+                }
 
-            console.log(data.value.foodNutrients)
-            nutritionInfo.value = data.value.foodNutrients
-        
+                console.log(totalFoodNutrients[index].nutrient)
 
+                index += 1
+            }
         }
-        
+
+
     }
+
+    console.log(totalFoodNutrients)
 }
-
-
 
 
 console.log('in here')
@@ -84,7 +82,7 @@ console.log('in here')
         <div v-if="nutritionInfo">
             <ul>
                 <li v-for="nutrient in nutritionInfo">
-                    {{ nutrient.value }}{{ nutrient.unitName.toLowerCase() }} {{ nutrient.nutrientName }}
+                    {{ nutrient.amount }}{{ nutrient.nutrient.unitName.toLowerCase() }} {{ nutrient.nutrient.name }}
                 </li>
             </ul>
         </div>

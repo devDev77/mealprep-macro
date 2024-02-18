@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/tailwindcss", "nuxt-vuefire"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-vuefire", "@nuxt/content"],
   vuefire: {
     config: {
       apiKey: process.env.NUXT_FIREBASE_API_KEY,
