@@ -1,54 +1,9 @@
 
 <script setup>
 
-import { ref } from 'vue';
+import { useNutrition } from '../composables/useNutrition'
 
-const ingredients = ref(['ground beef', 'red onion'])
-
-const nutritionInfo = ref(null)
-
-const { data: nutrition } = await useAsyncData('nutrition', () => queryContent().find())
-
-async function getNutritionInfo() {
-
-    nutritionInfo.value = null
-    let totalFoodNutrients = null
-
-    for (const ingredient of ingredients.value) {
-
-        let keyWords = ingredient.toLowerCase().match(/\w+/g)
-
-        let results = nutrition.value[0].FoundationFoods.filter((array) => {
-
-            return keyWords.every(word => array.description.toLowerCase().includes(word))
-
-        })
-
-        let nutrients = results[0].foodNutrients.filter(amt => amt.amount > 0.1)
-        let foodPortion = results[0].foodPortion
-
-        let index = 0
-
-        if (!totalFoodNutrients) {
-            totalFoodNutrients = nutrients
-        } else {
-            for (const nutrient of nutrients) {
-
-                if (nutrient.nutrient.id === totalFoodNutrients[index].nutrient.id) {
-                    nutrient.nutrient.amount += totalFoodNutrients[index].nutrient.amount
-                }
-
-                console.log(totalFoodNutrients[index].nutrient)
-
-                index += 1
-            }
-        }
-
-
-    }
-
-    console.log(totalFoodNutrients)
-}
+const { ingredients, nutritionInfo, getNutritionData, findNutrient } = useNutrition()
 
 
 console.log('in here')
@@ -56,39 +11,50 @@ console.log('in here')
 
 
 <template>
-    <div>
-        <h1 class="text-3xl">Create New Recipe</h1>
+    <h1 class="text-3xl">Create New Recipe</h1>
 
-        <h3 class="text-2xl">Ingredients </h3>
-        <div>
 
+    <div class="w-full grid justify-content grid-rows-1 grid-cols-2">
+        <div class="">
+            <h3 class="text-2xl">Ingredients</h3>
             <ul>
                 <li>
-                    <input id="ingredient" class="border border-black h-12 w-1/2 my-2" v-model="ingredients[0]" type="text">
-                </li>
-                <li>
-                    <input id="ingredient" class="border border-black h-12 w-1/2 my-2" v-model="ingredients[1]" type="text">
+                    <input id="ingredient" v-model="ingredients[0]" class="border border-black h-12 w-10/12 my-2"
+                        type="text">
                 </li>
             </ul>
 
+            <button @click="getNutritionData">
+                Submit
+            </button>
+
         </div>
 
-        <!-- <textarea id="ingredients" v-model="ingredient" name="ingredients" rows="4" cols="50"></textarea> -->
 
-        <button @click="getNutritionInfo">
-            Submit
-        </button>
 
-        <div v-if="nutritionInfo">
-            <ul>
-                <li v-for="nutrient in nutritionInfo">
-                    {{ nutrient.amount }}{{ nutrient.nutrient.unitName.toLowerCase() }} {{ nutrient.nutrient.name }}
-                </li>
-            </ul>
+        <div class="w-8/12 justify-self-end">
+
+            <h3 class="text-3xl">Nutrition</h3>
+            <div v-if="nutritionInfo">
+                <div class="text-2xl mt-2 "> {{ findNutrient('energy') }} Calories </div>
+                <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold">
+
+                    <div class=""> {{ findNutrient('protein') }} Protein</div>
+                    <div class=""> {{ findNutrient('carb') }} Carbs</div>
+                    <div class=""> {{ findNutrient('fat') }} Fat</div>
+                </div>
+
+                <div class=" mt-2 max-h-[475px] border border-black overflow-auto">
+                    <ul class="p-2">
+                        <li v-for="nutrient in nutritionInfo">
+                            {{ nutrient.amount }}{{ nutrient.nutrient.unitName.toLowerCase() }} {{ nutrient.nutrient.name }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
-
     </div>
 </template>
 
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style>../composables/useNutrition
