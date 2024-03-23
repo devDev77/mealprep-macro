@@ -1,12 +1,21 @@
-
 <script setup>
 
 import { useNutrition } from '../composables/useNutrition'
 
-const { ingredients, nutritionInfo, getNutritionData, findNutrient } = useNutrition()
+
+const { nutritionInfo, isLoading, macros, getNutritionData, add, foodPortion, reset, bulkImport } = useNutrition()
+
+const showNutrition = ref(true)
 
 
-console.log('in here')
+
+const CreateBulkImport = resolveComponent('CreateBulkImport')
+const CreateManual = resolveComponent('CreateManual')
+
+onMounted(() => {
+    reset()
+})
+
 </script>
 
 
@@ -14,47 +23,63 @@ console.log('in here')
     <h1 class="text-3xl">Create New Recipe</h1>
 
 
-    <div class="w-full grid justify-content grid-rows-1 grid-cols-2">
-        <div class="">
+    <div class="w-10/12 flex justify-between">
+        <div class="w-5/12">
             <h3 class="text-2xl">Ingredients</h3>
-            <ul>
-                <li>
-                    <input id="ingredient" v-model="ingredients[0]" class="border border-black h-12 w-10/12 my-2"
-                        type="text">
-                </li>
-            </ul>
-
-            <button @click="getNutritionData">
-                Submit
-            </button>
+            <CreateTabs @switchInputs="(val) => bulkImport = val" :bulkImport="bulkImport" :key="bulkImport" />
+            
+            <component :is="bulkImport ? CreateBulkImport : CreateManual" />
 
         </div>
 
 
 
-        <div class="w-8/12 justify-self-end">
-
+        <div class="w-6/12">
             <h3 class="text-3xl">Nutrition</h3>
-            <div v-if="nutritionInfo">
-                <div class="text-2xl mt-2 "> {{ findNutrient('energy') }} Calories </div>
-                <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold">
 
-                    <div class=""> {{ findNutrient('protein') }} Protein</div>
-                    <div class=""> {{ findNutrient('carb') }} Carbs</div>
-                    <div class=""> {{ findNutrient('fat') }} Fat</div>
+            
+            <div v-if="isLoading" class="">
+                <p class="2xl">Loading...</p>
+            </div>
+
+            <div v-if="nutritionInfo" class="grid justify-start justify-items-center">
+
+
+                <div>
+                    <div class="text-2xl mt-2 text-center font-bold "> {{ macros.calories }} Calories </div>
+                    <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold ">
+
+                        <div class="text-protein-color"> {{ macros.protein }}g Protein</div>
+                        <div class="text-carbo-color"> {{ macros.carbo }}g Carbs</div>
+                        <div class="text-fat-color"> {{ macros.fat }}g Fat</div>
+                    </div>
                 </div>
 
-                <div class=" mt-2 max-h-[475px] border border-black overflow-auto">
-                    <ul class="p-2">
+
+                <!-- <doughnutChart v-if="!showNutrition" class="my-8 w-[400px] " :macros="macros"  /> -->
+
+                <div class="w-[400px] my-3 h-[400px] border-y-2 border-black overflow-auto">
+                    <ul class="p-2 pl-3">
                         <li v-for="nutrient in nutritionInfo">
-                            {{ nutrient.amount }}{{ nutrient.nutrient.unitName.toLowerCase() }} {{ nutrient.nutrient.name }}
+                            {{ nutrient.amount }}{{ nutrient.nutrient.unitName.toLowerCase() }} {{
+                    nutrient.nutrient.name }}
                         </li>
                     </ul>
                 </div>
+
+                <button @click="toggleNutrition" class='btn bg-orange-300 w-fit '>{{ showNutrition ? 'Hide Nutrition Facts' :
+                    'Show Nutrition Facts' }}</button>
             </div>
         </div>
     </div>
 </template>
 
 
-<style lang="scss" scoped></style>../composables/useNutrition
+<style scoped>
+.btn {
+    padding: 10px;
+    border: black;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+</style>

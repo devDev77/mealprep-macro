@@ -14,7 +14,7 @@ const recipe = defineProps(['id', 'name', 'img', 'calories', 'protein', 'carbs',
             :src="recipe.img"
             alt="">
         <div class="px-6 py-4 text-center ">
-            <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold">
+            <div class="text-gray-700 px-auto mb-1 flex inline-flex margin-auto space-x-6 text-lg font-bold ">
                 <div class="">{{ recipe.calories }} Cal</div>
                 <div class="">{{ recipe.protein }} P</div>
                 <div class="">{{ recipe.carbs }} C</div>
@@ -24,6 +24,7 @@ const recipe = defineProps(['id', 'name', 'img', 'calories', 'protein', 'carbs',
             <div class="font-bold text-2xl mb-2">{{ recipe.name }}</div>
 
         </div>
+        
         <div class="px-6 pb-2 text-center">
             <span
                 class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#photography</span>
